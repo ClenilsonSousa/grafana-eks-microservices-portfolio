@@ -59,27 +59,27 @@ Este projeto implementa uma **plataforma de observabilidade distribuída** no **
 User ─► Route 53 ─► ACM TLS ─► WAFv2 (4 rules) ─► ALB
                                                       │
                                               ┌───────▼────────┐
-                                              │   Kong Gateway  │
-                                              │   (API Gateway) │
+                                              │   Kong Gateway │
+                                              │   (API Gateway)│
                                               └───────┬────────┘
                                                       │
                                               ┌───────▼────────┐
-                                              │  Istio Gateway  │
-                                              │  (Service Mesh) │
+                                              │  Istio Gateway │
+                                              │  (Service Mesh)│
                                               └───────┬────────┘
-                          ┌───────────────────────────┼───────────────────────────┐
+                          ┌───────────────────────────┼──────────────────────────┐
+                          │                           │                          │
+                ┌─────────▼──────────┐    ┌───────────▼──────────┐   ┌───────────▼──────────┐
+                │   Auth Service     │    │  Dashboard Service   │   │   Metrics Service    │
+                │   FastAPI :8000    │    │       :8080          │   │       :8080          │
+                │   PostgreSQL 16    │    │     MySQL 8.0        │   │     DynamoDB         │
+                └────────────────────┘    └──────────────────────┘   └──────────────────────┘
                           │                           │                           │
-                ┌─────────▼──────────┐   ┌───────────▼──────────┐   ┌───────────▼──────────┐
-                │   Auth Service     │   │  Dashboard Service    │   │   Metrics Service    │
-                │   FastAPI :8000    │   │       :8080           │   │       :8080          │
-                │   PostgreSQL 16    │   │     MySQL 8.0         │   │     DynamoDB         │
-                └────────────────────┘   └──────────────────────┘   └──────────────────────┘
-                          │                           │                           │
-                ┌─────────▼──────────┐   ┌───────────▼──────────┐   ┌───────────▼──────────┐
-                │  Alerting Service  │   │ Notification Service  │   │   Query Service      │
-                │       :8080        │   │       :8080           │   │       :8080          │
-                │   PostgreSQL 16    │   │    (stateless)        │   │  Redis 7.1 Multi-AZ  │
-                └────────────────────┘   └──────────────────────┘   └──────────────────────┘
+                ┌─────────▼──────────┐   ┌────────────▼──────────┐   ┌────────────▼──────────┐
+                │  Alerting Service  │   │ Notification Service  │   │   Query Service       │
+                │       :8080        │   │       :8080           │   │       :8080           │
+                │   PostgreSQL 16    │   │    (stateless)        │   │  Redis 7.1 Multi-AZ   │
+                └────────────────────┘   └───────────────────────┘   └───────────────────────┘
 ```
 
 ---
@@ -157,7 +157,7 @@ User ─► Route 53 ─► ACM TLS ─► WAFv2 (4 rules) ─► ALB
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                         SNS Topics (Pub/Sub)                              │
+│                         SNS Topics (Pub/Sub)                             │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  metrics-created ──► alerting-events (SQS) ──► Alerting Service          │
